@@ -262,3 +262,8 @@ INSERT INTO `event_settings` (`tenant_id`, `setting_key`, `setting_value`, `sett
 (1, 'contact_facebook', 'https://facebook.com/reunion2027', 'contact', 'ফেসবুক পেজ / গ্রুপ'),
 (1, 'registration_enabled', '1', 'general', 'অনলাইন নিবন্ধন চালু (1) বা বন্ধ (0)');
 
+-- Default Admin User (username: admin, password: Admin@2027)
+INSERT INTO `users` (`id`, `tenant_id`, `role_id`, `name`, `username`, `email`, `phone`, `password_hash`, `status`) VALUES
+(1, 1, 1, 'প্রধান অ্যাডমিন', 'admin', 'admin@reunion2027.com', '01712345678', '$2y$10$5alyAt6FF/8SQiPUxYd9AuIIAnx4huIhwSu9EmNiDXmzJ/E/hEUqq', 'active');
+
+
