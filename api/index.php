@@ -43,3 +43,4 @@ if (is_dir($targetFile)) {
 
 // 5. Fallback: load index.php
 require $rootDir . '/index.php';
+
