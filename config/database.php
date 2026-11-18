@@ -23,6 +23,12 @@ class Database {
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
             ];
 
+            // If connecting to remote cloud database (e.g. TiDB Cloud / Aiven), enable SSL
+            if ($host !== '127.0.0.1' && $host !== 'localhost') {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = true;
+                $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+            }
+
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
