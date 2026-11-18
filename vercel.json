@@ -1,0 +1,64 @@
+{
+  "functions": {
+    "api/**/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "admin/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "moderator/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "auth/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    },
+    "verification/*.php": {
+      "runtime": "vercel-php@0.7.2"
+    }
+  },
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/$1"
+    },
+    {
+      "src": "/moderator/(.*)",
+      "dest": "/moderator/$1"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/auth/$1"
+    },
+    {
+      "src": "/verification/(.*)",
+      "dest": "/verification/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/receipt",
+      "dest": "/receipt.php"
+    },
+    {
+      "src": "/receipt.php",
+      "dest": "/receipt.php"
+    },
+    {
+      "src": "/",
+      "dest": "/index.php"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
