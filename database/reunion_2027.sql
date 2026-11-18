@@ -1,8 +1,8 @@
 -- Reunion 2027 Database Schema
 -- বেরইল শামসুদ্দিন দাখিল মাদ্রাসা - সুবর্ণ জয়ন্তী ও ঈদ পুনর্মিলনী ২০২৭
 
-CREATE DATABASE IF NOT EXISTS `reunion_2027` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `reunion_2027`;
+CREATE DATABASE IF NOT EXISTS `reunion` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `reunion`;
 
 SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
