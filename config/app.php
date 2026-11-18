@@ -31,7 +31,10 @@ function getBaseUrl(): string {
     if ($pos !== false) {
         return $protocol . $host . substr($dir, 0, $pos + 8);
     }
-    return $protocol . $host . ($dir === '/' ? '' : $dir);
+    if ($dir === '/' || $dir === '\\' || $dir === '.' || $dir === '/api') {
+        return $protocol . $host;
+    }
+    return $protocol . $host . $dir;
 }
 
 // Global settings cache
