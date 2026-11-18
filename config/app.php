@@ -10,11 +10,84 @@ if (file_exists(APP_ROOT . '/vendor/autoload.php')) {
     require_once APP_ROOT . '/vendor/autoload.php';
 }
 
+// Database-backed Session Handler for multi-instance / Serverless persistence (e.g. Vercel)
+class DatabaseSessionHandler implements SessionHandlerInterface {
+    private function getDb(): ?PDO {
+        try {
+            return Database::getConnection();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    public function open(string $path, string $name): bool {
+        return true;
+    }
+
+    public function close(): bool {
+        return true;
+    }
+
+    public function read(string $id): string|false {
+        $db = $this->getDb();
+        if (!$db) return '';
+        try {
+            $stmt = $db->prepare("SELECT data FROM sessions WHERE id = ? AND expires_at > ? LIMIT 1");
+            $stmt->execute([$id, time()]);
+            $data = $stmt->fetchColumn();
+            return $data !== false ? (string)$data : '';
+        } catch (\Throwable $e) {
+            return '';
+        }
+    }
+
+    public function write(string $id, string $data): bool {
+        $db = $this->getDb();
+        if (!$db) return false;
+        try {
+            $expires = time() + (86400 * 7); // 7 days session
+            $stmt = $db->prepare("REPLACE INTO sessions (id, data, expires_at) VALUES (?, ?, ?)");
+            return $stmt->execute([$id, $data, $expires]);
+        } catch (\Throwable $e) {
+            error_log("Session write error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function destroy(string $id): bool {
+        $db = $this->getDb();
+        if (!$db) return true;
+        try {
+            $stmt = $db->prepare("DELETE FROM sessions WHERE id = ?");
+            return $stmt->execute([$id]);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    public function gc(int $max_lifetime): int|false {
+        $db = $this->getDb();
+        if (!$db) return 0;
+        try {
+            $stmt = $db->prepare("DELETE FROM sessions WHERE expires_at < ?");
+            $stmt->execute([time()]);
+            return $stmt->rowCount();
+        } catch (\Throwable $e) {
+            return 0;
+        }
+    }
+}
+
 // Start secure session if not started
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', '1');
     ini_set('session.use_only_cookies', '1');
     ini_set('session.cookie_samesite', 'Lax');
+
+    $handler = new DatabaseSessionHandler();
+    session_set_save_handler($handler, true);
+    register_shutdown_function('session_write_close');
+
     session_start();
 }
 

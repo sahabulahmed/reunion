@@ -210,6 +210,14 @@ CREATE TABLE `event_settings` (
     CONSTRAINT `fk_settings_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 13. Sessions Table (Serverless Persistence across Vercel Lambdas)
+CREATE TABLE IF NOT EXISTS `sessions` (
+    `id` VARCHAR(128) NOT NULL PRIMARY KEY,
+    `data` MEDIUMTEXT NOT NULL,
+    `expires_at` INT UNSIGNED NOT NULL,
+    INDEX `idx_sessions_expires` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- SEED DATA
 
 -- Default Tenant
