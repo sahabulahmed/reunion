@@ -22,19 +22,16 @@ if (session_status() === PHP_SESSION_NONE) {
 function getBaseUrl(): string {
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || ($_SERVER['SERVER_PORT'] ?? 80) == 443) ? "https://" : "http://";
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $script = $_SERVER['SCRIPT_NAME'] ?? '';
-    // Check if under /reunion/
-    $dir = dirname($script);
-    $dir = str_replace('\\', '/', $dir);
-    // Find base path up to root of project
-    $pos = strpos($dir, '/reunion');
+    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+    
+    // Check if hosted under local XAMPP subfolder /reunion
+    $pos = stripos($script, '/reunion');
     if ($pos !== false) {
-        return $protocol . $host . substr($dir, 0, $pos + 8);
+        return $protocol . $host . substr($script, 0, $pos + 8);
     }
-    if ($dir === '/' || $dir === '\\' || $dir === '.' || $dir === '/api') {
-        return $protocol . $host;
-    }
-    return $protocol . $host . $dir;
+    
+    // On Vercel or any root domain/subdomain, base URL is the domain root
+    return $protocol . $host;
 }
 
 // Global settings cache

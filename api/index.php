@@ -15,6 +15,12 @@ if (empty($path) || $path === 'index.php') {
 
 // Security: sanitize path
 $cleanPath = str_replace(['..', "\0"], '', $path);
+
+// Normalize any accidentally prefixed /auth/admin paths
+if (strpos($cleanPath, 'auth/admin/') === 0) {
+    $cleanPath = substr($cleanPath, 5);
+}
+
 $targetFile = $rootDir . '/' . $cleanPath;
 
 // 2. Direct PHP file (e.g., receipt.php, auth/login.php, api/register.php)
