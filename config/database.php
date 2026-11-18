@@ -33,6 +33,9 @@ class Database {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
                 error_log("Database connection failed: " . $e->getMessage());
+                if (isset($_GET['debug'])) {
+                    die("DB Error: " . $e->getMessage() . " (Host: {$host}, Port: {$port}, DB: {$db}, User: {$user})");
+                }
                 die("ডাটাবেজ সংযোগে সমস্যা হয়েছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।");
             }
         }
