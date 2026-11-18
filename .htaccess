@@ -1,0 +1,19 @@
+# .htaccess for Reunion 2027
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent directory listing
+    Options -Indexes
+
+    # Block sensitive file access
+    RewriteRule ^(database|config|storage/logs)/ - [F,L]
+    RewriteRule \.(sql|env|json|lock|md|git|log)$ - [F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+

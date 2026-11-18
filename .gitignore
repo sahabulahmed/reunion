@@ -1,0 +1,16 @@
+# Dependency directories
+/vendor/
+
+# Temporary storage & caches
+/storage/cache/*
+/storage/temp/*
+!/storage/cache/.gitkeep
+!/storage/temp/.gitkeep
+
+# System files & IDE
+.vscode/
+.idea/
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store
