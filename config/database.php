@@ -8,11 +8,11 @@ class Database {
 
     public static function getConnection(): PDO {
         if (self::$instance === null) {
-            $host = getenv('DB_HOST') ?: '127.0.0.1';
-            $port = getenv('DB_PORT') ?: '3306';
-            $db   = getenv('DB_DATABASE') ?: 'reunion_2027';
-            $user = getenv('DB_USERNAME') ?: 'root';
-            $pass = getenv('DB_PASSWORD') ?: '';
+            $host = getenv('DB_HOST') ?: ($_SERVER['DB_HOST'] ?? ($_ENV['DB_HOST'] ?? '127.0.0.1'));
+            $port = getenv('DB_PORT') ?: ($_SERVER['DB_PORT'] ?? ($_ENV['DB_PORT'] ?? '3306'));
+            $db   = getenv('DB_DATABASE') ?: ($_SERVER['DB_DATABASE'] ?? ($_ENV['DB_DATABASE'] ?? 'reunion'));
+            $user = getenv('DB_USERNAME') ?: ($_SERVER['DB_USERNAME'] ?? ($_ENV['DB_USERNAME'] ?? 'root'));
+            $pass = getenv('DB_PASSWORD') ?: ($_SERVER['DB_PASSWORD'] ?? ($_ENV['DB_PASSWORD'] ?? ''));
             $charset = 'utf8mb4';
 
             $dsn = "mysql:host={$host};port={$port};dbname={$db};charset={$charset}";
@@ -34,7 +34,7 @@ class Database {
             } catch (PDOException $e) {
                 error_log("Database connection failed: " . $e->getMessage());
                 if (isset($_GET['debug'])) {
-                    die("DB Error: " . $e->getMessage() . " (Host: {$host}, Port: {$port}, DB: {$db}, User: {$user})");
+                    die("DB Error: " . $e->getMessage() . " | Resolved Host: " . var_export($host, true) . " | getenv: " . var_export(getenv('DB_HOST'), true) . " | SERVER: " . var_export($_SERVER['DB_HOST'] ?? null, true));
                 }
                 die("ডাটাবেজ সংযোগে সমস্যা হয়েছে। দয়া করে কিছুক্ষণ পর আবার চেষ্টা করুন।");
             }
